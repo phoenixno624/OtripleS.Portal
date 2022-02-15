@@ -1,11 +1,20 @@
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using OtripleS.Portal.Web;
 
-var builder = WebAssemblyHostBuilder.CreateDefault(args);
-builder.RootComponents.Add<App>("#app");
-builder.RootComponents.Add<HeadOutlet>("head::after");
+namespace OtripleS.Portal.Web
+{
+    public class Program
+    {
+        public static async Task Main(string[] args)
+        {
+            var builder = WebAssemblyHostBuilder.CreateDefault(args);
+            var startup = new Startup(builder.Configuration);
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            startup.Configure(builder);
+            startup.ConfigureServices(builder);
 
-await builder.Build().RunAsync();
+            await builder
+                .Build()
+                .RunAsync();
+        }
+    }
+}
