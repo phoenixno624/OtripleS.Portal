@@ -1,26 +1,40 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using OtripleS.Portal.Web.Brokers.Api;
+using OtripleS.Portal.Web.Brokers.Logging;
+using OtripleS.Portal.Web.Models.Configurations;
+using RESTFulSense.WebAssembly.Clients;
 
 namespace OtripleS.Portal.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
+        public Startup(IConfiguration configuration) =>
             Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+
+        public void Configure(RootComponentMappingCollection components)
+        {
+            components.Add<App>("#app");
+            components.Add<HeadOutlet>("head::after");
         }
 
-        public void Configure(WebAssemblyHostBuilder builder)
+        public void ConfigureServices(IServiceCollection services)
         {
-            builder.RootComponents.Add<App>("#app");
-            builder.RootComponents.Add<HeadOutlet>("head::after");
+            AddHttpClient(services);
+
+            services.AddScoped<ILogger, Logger<LoggingBroker>>();
+            services.AddScoped<IApiBroker, ApiBroker>();
+            services.AddScoped<ILoggingBroker, LoggingBroker>();
         }
 
-        public void ConfigureServices(WebAssemblyHostBuilder builder)
+        void AddHttpClient(IServiceCollection services)
         {
-            builder.Services.AddScoped(x => new HttpClient
+            services.AddHttpClient<IRESTFulApiFactoryClient, RESTFulApiFactoryClient>(client =>
             {
-                BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
+                var localConfigurations = Configuration.Get<LocalConfigurations>();
+                var apiUrl = localConfigurations.ApiConfigurations.Url;
+
+                client.BaseAddress = new Uri(apiUrl);
             });
         }
 

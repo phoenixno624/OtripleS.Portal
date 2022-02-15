@@ -9,8 +9,8 @@ namespace OtripleS.Portal.Web
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             var startup = new Startup(builder.Configuration);
 
-            startup.Configure(builder);
-            startup.ConfigureServices(builder);
+            startup.Configure(builder.RootComponents);
+            startup.ConfigureServices(builder.Services);
 
             await builder
                 .Build()
