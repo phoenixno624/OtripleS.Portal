@@ -2,7 +2,7 @@
 
 namespace OtripleS.Portal.Web.Brokers.Api
 {
-    public class ApiBroker : IApiBroker
+    public partial class ApiBroker : IApiBroker
     {
         readonly IRESTFulApiFactoryClient apiClient;
 
