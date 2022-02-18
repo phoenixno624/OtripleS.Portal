@@ -4,6 +4,7 @@ using OtripleS.Portal.Web.Brokers.Logging;
 using OtripleS.Portal.Web.Models.Students;
 using OtripleS.Portal.Web.Services.Students;
 using System;
+using System.Linq.Expressions;
 using Tynamix.ObjectFiller;
 
 namespace OtripleS.Portal.Web.Tests.Unit.Services.Students
@@ -26,6 +27,12 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.Students
 
         static Student CreateRandomStudent() =>
             CreateStudentFiller().Create();
+
+        static Expression<Func<Exception, bool>> SameExceptionAs(Exception expectedException)
+        {
+            return actualException => actualException.Message == expectedException.Message
+                && actualException.InnerException.Message == expectedException.InnerException.Message;
+        }
 
         static Filler<Student> CreateStudentFiller()
         {
