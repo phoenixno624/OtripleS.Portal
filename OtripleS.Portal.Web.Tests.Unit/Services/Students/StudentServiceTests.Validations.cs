@@ -12,7 +12,7 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.Students
         public async Task ShouldThrowValidationExceptionOnRegisterIfStudentIsNullAndLogItAsync()
         {
             // given
-            var invalidStudent = default(Student);
+            var invalidStudent = (Student)null;
             var nullStudentException = new NullStudentException();
             var expectedStudentValidationException = new StudentValidationException(nullStudentException);
 
