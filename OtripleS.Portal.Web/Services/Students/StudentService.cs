@@ -15,9 +15,7 @@ namespace OtripleS.Portal.Web.Services.Students
             this.loggingBroker = loggingBroker ?? throw new ArgumentNullException(nameof(loggingBroker));
         }
 
-        public ValueTask<Student> RegisterStudentAsync(Student student)
-        {
-            throw new NotImplementedException();
-        }
+        public async ValueTask<Student> RegisterStudentAsync(Student student) =>
+             await this.apiBroker.PostStudentAsync(student);
     }
 }
