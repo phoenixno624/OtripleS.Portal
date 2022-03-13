@@ -32,6 +32,11 @@ namespace OtripleS.Portal.Web.Services.Students
                         parameterName: nameof(student.FirstName),
                         parameterValue: student.FirstName);
 
+                case { } when IsInvalid(student.BirthDate):
+                    throw new InvalidStudentException(
+                        parameterName: nameof(student.BirthDate),
+                        parameterValue: student.BirthDate);
+
                 case { } when IsInvalid(student.CreatedBy):
                     throw new InvalidStudentException(
                         parameterName: nameof(student.CreatedBy),
@@ -48,5 +53,7 @@ namespace OtripleS.Portal.Web.Services.Students
             id == Guid.Empty;
         static bool IsInvalid(string text) =>
             string.IsNullOrWhiteSpace(text);
+        static bool IsInvalid(DateTimeOffset date) =>
+            date == default;
     }
 }

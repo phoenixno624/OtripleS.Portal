@@ -209,8 +209,8 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.Students
 
             var invalidStudentException =
                 new InvalidStudentException(
-                    parameterName: nameof(Student.CreatedBy),
-                    parameterValue: invalidStudent.CreatedBy);
+                    parameterName: nameof(Student.BirthDate),
+                    parameterValue: invalidStudent.BirthDate);
             var expectedStudentValidationException =
                 new StudentValidationException(invalidStudentException);
 
