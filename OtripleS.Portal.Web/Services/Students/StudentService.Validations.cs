@@ -7,8 +7,18 @@ namespace OtripleS.Portal.Web.Services.Students
     {
         void ValidateStudent(Student student)
         {
-            if (student is null)
-                throw new NullStudentException();
+            switch (student)
+            {
+                case null:
+                    throw new NullStudentException();
+                case { } when IsInvalid(student.Id):
+                    throw new InvalidStudentException(
+                        parameterName: nameof(student.Id),
+                        parameterValue: student.Id);
+            }
         }
+
+        static bool IsInvalid(Guid id) =>
+            id == Guid.Empty;
     }
 }

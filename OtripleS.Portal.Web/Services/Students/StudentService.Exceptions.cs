@@ -17,9 +17,13 @@ namespace OtripleS.Portal.Web.Services.Students
             {
                 throw CreateAndLogValidationException(nullStudentException);
             }
+            catch (InvalidStudentException invalidStudentException)
+            {
+                throw CreateAndLogValidationException(invalidStudentException);
+            }
         }
 
-        private StudentValidationException CreateAndLogValidationException(NullStudentException nullStudentException)
+        private StudentValidationException CreateAndLogValidationException(Exception nullStudentException)
         {
             var studentValidationException = new StudentValidationException(nullStudentException);
 
