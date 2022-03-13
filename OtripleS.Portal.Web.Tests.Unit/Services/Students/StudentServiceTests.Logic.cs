@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Moq;
+using OtripleS.Portal.Web.Models.Students;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -11,17 +12,17 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.Students
         public async Task ShouldRegisterStudentAsync()
         {
             // given
-            var randomStudent = CreateRandomStudent();
-            var inputStudent = randomStudent;
-            var retrievedStudent = inputStudent;
-            var expectedStudent = retrievedStudent;
+            Student randomStudent = CreateRandomStudent();
+            Student inputStudent = randomStudent;
+            Student retrievedStudent = inputStudent;
+            Student expectedStudent = retrievedStudent;
 
             this.apiBrokerMock.Setup(broker =>
                 broker.PostStudentAsync(inputStudent))
                     .ReturnsAsync(retrievedStudent);
 
             // when
-            var actualStudent = await this.studentService.RegisterStudentAsync(inputStudent);
+            Student actualStudent = await this.studentService.RegisterStudentAsync(inputStudent);
 
             // then
             actualStudent.Should()
