@@ -161,13 +161,13 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.Students
         [InlineData("")]
         [InlineData("   ")]
         public async Task ShouldThrowValidationExceptionOnRegisterIfStudentUserFirstNameIsInvalidAndLogItAsync(
-            string firstName)
+            string invalidFirstName)
         {
             // given
             Student randomStudent = CreateRandomStudent();
             Student invalidStudent = randomStudent;
 
-            invalidStudent.FirstName = firstName;
+            invalidStudent.FirstName = invalidFirstName;
 
             var invalidStudentException =
                 new InvalidStudentException(
