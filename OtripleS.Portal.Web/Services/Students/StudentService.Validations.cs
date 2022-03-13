@@ -36,6 +36,11 @@ namespace OtripleS.Portal.Web.Services.Students
                     throw new InvalidStudentException(
                         parameterName: nameof(student.CreatedBy),
                         parameterValue: student.CreatedBy);
+
+                case { } when IsInvalid(student.UpdatedBy):
+                    throw new InvalidStudentException(
+                        parameterName: nameof(student.UpdatedBy),
+                        parameterValue: student.UpdatedBy);
             }
         }
 
