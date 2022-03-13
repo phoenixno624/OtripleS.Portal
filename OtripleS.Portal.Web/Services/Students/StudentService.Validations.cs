@@ -15,10 +15,16 @@ namespace OtripleS.Portal.Web.Services.Students
                     throw new InvalidStudentException(
                         parameterName: nameof(student.Id),
                         parameterValue: student.Id);
+                case { } when IsInvalid(student.UserId):
+                    throw new InvalidStudentException(
+                        parameterName: nameof(student.UserId),
+                        parameterValue: student.UserId);
             }
         }
 
         static bool IsInvalid(Guid id) =>
             id == Guid.Empty;
+        static bool IsInvalid(string text) =>
+            string.IsNullOrWhiteSpace(text);
     }
 }
