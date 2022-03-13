@@ -198,6 +198,44 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.Students
         }
 
         [Fact]
+        public async Task ShouldThrowValidationExceptionOnRegisterIfBirthDateIsInvalidAndLogItAsync()
+        {
+            // given
+            DateTimeOffset invalidDate = default;
+            Student randomStudent = CreateRandomStudent();
+            Student invalidStudent = randomStudent;
+
+            invalidStudent.BirthDate = invalidDate;
+
+            var invalidStudentException =
+                new InvalidStudentException(
+                    parameterName: nameof(Student.CreatedBy),
+                    parameterValue: invalidStudent.CreatedBy);
+            var expectedStudentValidationException =
+                new StudentValidationException(invalidStudentException);
+
+            // when
+            ValueTask<Student> registerStudentTask =
+                this.studentService.RegisterStudentAsync(invalidStudent);
+
+            // then
+            await Assert.ThrowsAsync<StudentValidationException>(() =>
+                registerStudentTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(
+                    SameExceptionAs(expectedStudentValidationException))),
+                    Times.Once);
+
+            this.apiBrokerMock.Verify(broker =>
+                broker.PostStudentAsync(It.IsAny<Student>()),
+                    Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.apiBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async Task ShouldThrowValidationExceptionOnRegisterIfCreatedByIdIsInvalidAndLogItAsync()
         {
             // given
