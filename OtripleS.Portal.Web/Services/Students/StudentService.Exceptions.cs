@@ -22,6 +22,10 @@ namespace OtripleS.Portal.Web.Services.Students
             {
                 throw CreateAndLogValidationException(invalidStudentException);
             }
+            catch (HttpResponseUrlNotFoundException httpResponseUrlNotFoundException)
+            {
+                throw CreateAndLogCriticalDependencyException(httpResponseUrlNotFoundException);
+            }
             catch (HttpResponseBadRequestException httpResponseBadRequestException)
             {
                 throw CreateAndLogDependencyValidationException(httpResponseBadRequestException);
@@ -47,6 +51,16 @@ namespace OtripleS.Portal.Web.Services.Students
             this.loggingBroker.LogError(studentDependencyValidationException);
 
             return studentDependencyValidationException;
+        }
+        private StudentDependencyException CreateAndLogCriticalDependencyException(
+            Exception nullStudentException)
+        {
+            var studentDependencyException =
+                new StudentDependencyException(nullStudentException);
+
+            this.loggingBroker.LogCritical(studentDependencyException);
+
+            return studentDependencyException;
         }
     }
 }
