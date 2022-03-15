@@ -27,13 +27,13 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.Students
 
         static Student CreateRandomStudent() =>
             CreateStudentFiller().Create();
-
         static Expression<Func<Exception, bool>> SameExceptionAs(Exception expectedException)
         {
             return actualException => actualException.Message == expectedException.Message
                 && actualException.InnerException.Message == expectedException.InnerException.Message;
         }
-
+        static string GetRandomString() =>
+            new MnemonicString().GetValue();
         static Filler<Student> CreateStudentFiller()
         {
             var filler = new Filler<Student>();
