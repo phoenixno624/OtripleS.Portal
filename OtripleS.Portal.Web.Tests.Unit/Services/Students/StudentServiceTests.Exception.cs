@@ -2,6 +2,7 @@
 using OtripleS.Portal.Web.Models.Students;
 using OtripleS.Portal.Web.Models.Students.Exceptions;
 using RESTFulSense.WebAssembly.Exceptions;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
@@ -10,6 +11,28 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.Students
 {
     public partial class StudentServiceTests
     {
+        public static TheoryData CriticalApiExceptions()
+        {
+            string exceptionMessage = GetRandomString();
+            var responseMessage = new HttpResponseMessage();
+
+            var httpResponseUrlNotFoundException =
+                new HttpResponseUrlNotFoundException(
+                    responseMessage: responseMessage,
+                    message: exceptionMessage);
+
+            var httpResponseUnauthorizedException =
+                new HttpResponseUnauthorizedException(
+                    responseMessage: responseMessage,
+                    message: exceptionMessage);
+
+            return new TheoryData<Exception>
+            {
+                httpResponseUrlNotFoundException,
+                httpResponseUnauthorizedException
+            };
+        }
+
         [Fact]
         public async Task ShouldThrowDependencyValidationExceptionOnRegisterIfBadRequestErrorOccursAndLogItAsync()
         {
@@ -50,25 +73,20 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.Students
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
-        [Fact]
-        public async Task ShouldThrowCriticalDependencyExceptionOnRegisterIfUrlNotFoundErrorOccursAndLogItAsync()
+        [Theory]
+        [MemberData(nameof(CriticalApiExceptions))]
+        public async Task ShouldThrowCriticalDependencyExceptionOnRegisterIfUrlNotFoundErrorOccursAndLogItAsync(
+            Exception httpResponseCriticalException)
         {
             // given
             Student someStudent = CreateRandomStudent();
-            string exceptionMessage = GetRandomString();
-            var responseMessage = new HttpResponseMessage();
-
-            var httpResponseUrlNotFoundException =
-                new HttpResponseUrlNotFoundException(
-                    responseMessage: responseMessage,
-                    message: exceptionMessage);
 
             var expectedStudentDependencyException =
-                new StudentDependencyException(httpResponseUrlNotFoundException);
+                new StudentDependencyException(httpResponseCriticalException);
 
             this.apiBrokerMock.Setup(broker =>
                 broker.PostStudentAsync(someStudent))
-                    .ThrowsAsync(httpResponseUrlNotFoundException);
+                    .ThrowsAsync(httpResponseCriticalException);
 
             // when
             ValueTask<Student> registerStudentTask =
