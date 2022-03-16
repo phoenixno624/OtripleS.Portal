@@ -46,43 +46,57 @@ namespace OtripleS.Portal.Web.Services.Students
             {
                 throw CreateAndLogDependencyException(httpResponseException);
             }
+            catch (Exception exception)
+            {
+                throw CreateAndLogServiceException(exception);
+            }
         }
 
         private StudentValidationException CreateAndLogValidationException(
-            Exception nullStudentException)
+            Exception exception)
         {
             var studentValidationException =
-                new StudentValidationException(nullStudentException);
+                new StudentValidationException(exception);
 
             this.loggingBroker.LogError(studentValidationException);
 
             return studentValidationException;
         }
         private StudentDependencyValidationException CreateAndLogDependencyValidationException(
-            Exception nullStudentException)
+            Exception exception)
         {
             var studentDependencyValidationException =
-                new StudentDependencyValidationException(nullStudentException);
+                new StudentDependencyValidationException(exception);
 
             this.loggingBroker.LogError(studentDependencyValidationException);
 
             return studentDependencyValidationException;
         }
         private StudentDependencyException CreateAndLogCriticalDependencyException(
-            Exception nullStudentException)
+            Exception exception)
         {
             var studentDependencyException =
-                new StudentDependencyException(nullStudentException);
+                new StudentDependencyException(exception);
 
             this.loggingBroker.LogCritical(studentDependencyException);
 
             return studentDependencyException;
         }
         private StudentDependencyException CreateAndLogDependencyException(
-            Exception nullStudentException)
+            Exception exception)
         {
             var studentDependencyException =
-                new StudentDependencyException(nullStudentException);
+                new StudentDependencyException(exception);
+
+            this.loggingBroker.LogError(studentDependencyException);
+
+            return studentDependencyException;
+        }
+        private StudentServiceException CreateAndLogServiceException(
+            Exception exception)
+        {
+            var studentDependencyException =
+                new StudentServiceException(exception);
 
             this.loggingBroker.LogError(studentDependencyException);
 

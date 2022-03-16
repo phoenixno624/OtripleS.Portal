@@ -201,7 +201,7 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.Students
                 this.studentService.RegisterStudentAsync(someStudent);
 
             // then
-            await Assert.ThrowsAsync<StudentDependencyException>(() =>
+            await Assert.ThrowsAsync<StudentServiceException>(() =>
                 registerStudentTask.AsTask());
 
             this.apiBrokerMock.Verify(broker =>
