@@ -11,6 +11,63 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.Students
 {
     public partial class StudentServiceTests
     {
+        public static TheoryData ValidationApiExceptions()
+        {
+            string exceptionMessage = GetRandomString();
+            var responseMessage = new HttpResponseMessage();
+
+            var httpResponseBadRequestException =
+                new HttpResponseBadRequestException(
+                    responseMessage: responseMessage,
+                    message: exceptionMessage);
+
+            var httpResponseConflictException =
+                new HttpResponseConflictException(
+                    responseMessage: responseMessage,
+                    message: exceptionMessage);
+
+            return new TheoryData<Exception>
+            {
+                httpResponseBadRequestException,
+                httpResponseConflictException
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(ValidationApiExceptions))]
+        public async Task ShouldThrowDependencyValidationExceptionOnRegisterIfBadRequestErrorOccursAndLogItAsync(
+            Exception validationApiException)
+        {
+            // given
+            Student someStudent = CreateRandomStudent();
+
+            var expectedStudentDependencyValidationException =
+                new StudentDependencyValidationException(validationApiException);
+
+            this.apiBrokerMock.Setup(broker =>
+                broker.PostStudentAsync(someStudent))
+                    .ThrowsAsync(validationApiException);
+
+            // when
+            ValueTask<Student> registerStudentTask =
+                this.studentService.RegisterStudentAsync(someStudent);
+
+            // then
+            await Assert.ThrowsAsync<StudentDependencyValidationException>(() =>
+                registerStudentTask.AsTask());
+
+            this.apiBrokerMock.Verify(broker =>
+                broker.PostStudentAsync(It.IsAny<Student>()),
+                Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedStudentDependencyValidationException))),
+                Times.Once);
+
+            this.apiBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
         public static TheoryData CriticalApiExceptions()
         {
             string exceptionMessage = GetRandomString();
@@ -31,46 +88,6 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.Students
                 httpResponseUrlNotFoundException,
                 httpResponseUnauthorizedException
             };
-        }
-
-        [Fact]
-        public async Task ShouldThrowDependencyValidationExceptionOnRegisterIfBadRequestErrorOccursAndLogItAsync()
-        {
-            // given
-            Student someStudent = CreateRandomStudent();
-            string exceptionMessage = GetRandomString();
-            var responseMessage = new HttpResponseMessage();
-
-            var httpResponseBadRequestException =
-                new HttpResponseBadRequestException(
-                    responseMessage: responseMessage,
-                    message: exceptionMessage);
-
-            var expectedStudentDependencyValidationException =
-                new StudentDependencyValidationException(httpResponseBadRequestException);
-
-            this.apiBrokerMock.Setup(broker =>
-                broker.PostStudentAsync(someStudent))
-                    .ThrowsAsync(httpResponseBadRequestException);
-
-            // when
-            ValueTask<Student> registerStudentTask =
-                this.studentService.RegisterStudentAsync(someStudent);
-
-            // then
-            await Assert.ThrowsAsync<StudentDependencyValidationException>(() =>
-                registerStudentTask.AsTask());
-
-            this.apiBrokerMock.Verify(broker =>
-                broker.PostStudentAsync(It.IsAny<Student>()),
-                Times.Once);
-
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(expectedStudentDependencyValidationException))),
-                Times.Once);
-
-            this.apiBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
