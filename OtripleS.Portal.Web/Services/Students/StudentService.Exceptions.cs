@@ -30,6 +30,10 @@ namespace OtripleS.Portal.Web.Services.Students
             {
                 throw CreateAndLogCriticalDependencyException(httpResponseUnauthorizedException);
             }
+            catch (HttpResponseConflictException httpResponseConflictException)
+            {
+                throw CreateAndLogDependencyValidationException(httpResponseConflictException);
+            }
             catch (HttpResponseBadRequestException httpResponseBadRequestException)
             {
                 throw CreateAndLogDependencyValidationException(httpResponseBadRequestException);
