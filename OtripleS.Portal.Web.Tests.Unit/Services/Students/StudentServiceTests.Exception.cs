@@ -149,7 +149,7 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.Students
 
         [Theory]
         [MemberData(nameof(DependencyApiExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnRegisterIfInternalServerErrorOccursAndLogItAsync(
+        public async Task ShouldThrowDependencyExceptionOnRegisterIfApiDependencyErrorOccursAndLogItAsync(
             Exception depedencyApiException)
         {
             // given
