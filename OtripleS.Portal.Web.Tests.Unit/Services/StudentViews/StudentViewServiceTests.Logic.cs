@@ -46,7 +46,7 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.StudentViews
                 FirstName = randomStudentViewProperties.FirstName,
                 MiddleName = randomStudentViewProperties.MiddleName,
                 LastName = randomStudentViewProperties.LastName,
-                Gender = randomStudentViewProperties.GenderView,
+                Gender = randomStudentViewProperties.Gender,
                 BirthDate = randomStudentViewProperties.BirthDate,
                 CreatedBy = randomUserId,
                 UpdatedBy = randomUserId,

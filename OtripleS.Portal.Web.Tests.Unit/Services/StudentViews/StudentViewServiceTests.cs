@@ -51,7 +51,7 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.StudentViews
             return new
             {
                 Id = Guid.NewGuid(),
-                UserId = Guid.NewGuid(),
+                UserId = Guid.NewGuid().ToString(),
                 IdentityNumber = GetRandomString(),
                 FirstName = GetRandomName(),
                 MiddleName = GetRandomName(),
@@ -59,7 +59,6 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.StudentViews
                 BirthDate = GetRandomDate(),
                 Gender = randomStudentGender,
                 GenderView = (StudentViewGender)randomStudentGender,
-
                 CreatedDate = auditDates,
                 UpdatedDate = auditDates,
                 CreatedBy = auditIds,
