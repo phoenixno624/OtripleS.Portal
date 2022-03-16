@@ -125,25 +125,42 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.Students
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
-        [Fact]
-        public async Task ShouldThrowDependencyExceptionOnRegisterIfInternalServerErrorOccursAndLogItAsync()
+        public static TheoryData DependencyApiExceptions()
         {
-            // given
-            Student someStudent = CreateRandomStudent();
             string exceptionMessage = GetRandomString();
             var responseMessage = new HttpResponseMessage();
+
+            var httpResponseException =
+                new HttpResponseException(
+                    httpResponseMessage: responseMessage,
+                    message: exceptionMessage);
 
             var httpResponseInternalServerErrorException =
                 new HttpResponseInternalServerErrorException(
                     responseMessage: responseMessage,
                     message: exceptionMessage);
 
+            return new TheoryData<Exception>
+            {
+                httpResponseException,
+                httpResponseInternalServerErrorException
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(DependencyApiExceptions))]
+        public async Task ShouldThrowDependencyExceptionOnRegisterIfInternalServerErrorOccursAndLogItAsync(
+            Exception depedencyApiException)
+        {
+            // given
+            Student someStudent = CreateRandomStudent();
+
             var expectedStudentDependencyException =
-                new StudentDependencyException(httpResponseInternalServerErrorException);
+                new StudentDependencyException(depedencyApiException);
 
             this.apiBrokerMock.Setup(broker =>
                 broker.PostStudentAsync(someStudent))
-                    .ThrowsAsync(httpResponseInternalServerErrorException);
+                    .ThrowsAsync(depedencyApiException);
 
             // when
             ValueTask<Student> registerStudentTask =
