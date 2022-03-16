@@ -32,8 +32,9 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.StudentViews
             var compareConfig = new ComparisonConfig();
 
             compareConfig.IgnoreProperty<Student>(student => student.Id);
+            compareConfig.IgnoreProperty<Student>(student => student.UserId);
 
-            this.compareLogic = new CompareLogic();
+            this.compareLogic = new CompareLogic(compareConfig);
 
             this.studentViewService = new StudentViewService(
                 studentService: this.studentServiceMock.Object,
