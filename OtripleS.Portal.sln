@@ -7,6 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OtripleS.Portal.Web", "Otri
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OtripleS.Portal.Web.Tests.Unit", "OtripleS.Portal.Web.Tests.Unit\OtripleS.Portal.Web.Tests.Unit.csproj", "{4BD1AEB8-A20E-41E1-9700-62D1727829A1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{51C9A5E0-AF69-4700-8FBF-9250EA52DF13}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
