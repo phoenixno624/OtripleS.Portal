@@ -72,10 +72,17 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.StudentViews
             return actualStudent => this.compareLogic.Compare(expectedStudent, actualStudent)
                 .AreEqual;
         }
-        static string GetRandomName() =>
-            new RealNames(NameStyle.FirstName).GetValue();
         static DateTimeOffset GetRandomDate() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
+        static StudentView CreateRandomStudentView() =>
+            CreateStudentViewFiller().Create();
+        static Expression<Func<Exception, bool>> SameExceptionAs(Exception expectedException)
+        {
+            return actualException => actualException.Message == expectedException.Message
+                && actualException.InnerException.Message == expectedException.InnerException.Message;
+        }
+        static string GetRandomName() =>
+            new RealNames(NameStyle.FirstName).GetValue();
         static string GetRandomString() =>
             new MnemonicString().GetValue();
         static StudentGender GetRandomGender()
@@ -86,6 +93,16 @@ namespace OtripleS.Portal.Web.Tests.Unit.Services.StudentViews
             int randomStudentGenderValue = new IntRange(min: 0, max: studentGenderCount).GetValue();
 
             return (StudentGender)randomStudentGenderValue;
+        }
+        static Filler<StudentView> CreateStudentViewFiller()
+        {
+            var filler = new Filler<StudentView>();
+
+            filler.Setup()
+                .OnType<DateTimeOffset>()
+                .Use(DateTimeOffset.UtcNow);
+
+            return filler;
         }
     }
 }
