@@ -3,7 +3,7 @@
     public class StudentViewValidationException : Exception
     {
         public StudentViewValidationException(Exception innerException)
-            : base($"Student vView validation error occurred, try again.", innerException)
+            : base($"Student View validation error occurred, try again.", innerException)
         {
         }
     }

@@ -7,7 +7,7 @@ using OtripleS.Portal.Web.Services.Users;
 
 namespace OtripleS.Portal.Web.Services.StudentViews
 {
-    public class StudentViewService : IStudentViewService
+    public partial class StudentViewService : IStudentViewService
     {
         readonly IStudentService studentService;
         readonly IUserService userService;
@@ -26,14 +26,14 @@ namespace OtripleS.Portal.Web.Services.StudentViews
             this.loggingBroker = loggingBroker ?? throw new ArgumentNullException(nameof(loggingBroker));
         }
 
-        public async ValueTask<StudentView> AddStudentViewAsync(StudentView studentView)
-        {
-            Student student = MapToStudent(studentView);
+        public ValueTask<StudentView> AddStudentViewAsync(StudentView studentView) =>
+            TryCatch(async () =>
+            {
+                Student student = MapToStudent(studentView);
+                await this.studentService.RegisterStudentAsync(student);
 
-            await this.studentService.RegisterStudentAsync(student);
-
-            return studentView;
-        }
+                return studentView;
+            });
 
         Student MapToStudent(StudentView studentView)
         {
