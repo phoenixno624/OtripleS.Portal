@@ -11,10 +11,16 @@ namespace OtripleS.Portal.Web.Services.StudentViews
             {
                 case null:
                     throw new NullStudentViewException();
+
                 case { } when IsInvalid(studentView.IdentityNumber):
                     throw new InvalidStudentViewException(
                         parameterName: nameof(studentView.IdentityNumber),
                         parameterValue: studentView.IdentityNumber);
+
+                case { } when IsInvalid(studentView.FirstName):
+                    throw new InvalidStudentViewException(
+                        parameterName: nameof(studentView.FirstName),
+                        parameterValue: studentView.FirstName);
             }
         }
 
