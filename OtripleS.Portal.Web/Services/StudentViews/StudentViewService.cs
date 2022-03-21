@@ -29,6 +29,8 @@ namespace OtripleS.Portal.Web.Services.StudentViews
         public ValueTask<StudentView> AddStudentViewAsync(StudentView studentView) =>
             TryCatch(async () =>
             {
+                ValidateStudentView(studentView);
+
                 Student student = MapToStudent(studentView);
                 await this.studentService.RegisterStudentAsync(student);
 
